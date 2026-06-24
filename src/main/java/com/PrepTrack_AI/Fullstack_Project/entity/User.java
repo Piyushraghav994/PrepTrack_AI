@@ -27,7 +27,7 @@ import java.util.List;
         },
         indexes = {
                 @Index(name = "idx_users_email", columnList = "email"),
-                @Index(name = "idx_users_role",  columnList = "role")
+                @Index(name = "idx_users_role",  columnList = "role_id")
         }
 )
 @Getter
