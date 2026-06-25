@@ -2,9 +2,9 @@ package com.PrepTrack_AI.Fullstack_Project.service.impl;
 
 import com.PrepTrack_AI.Fullstack_Project.dto.*;
 import com.PrepTrack_AI.Fullstack_Project.entity.*;
-import com.PrepTrack_AI.Fullstack_Project.exception.DuplicateResourceException;
-import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
+import com.PrepTrack_AI.Fullstack_Project.exception.*;
 import com.PrepTrack_AI.Fullstack_Project.repository.*;
+import com.PrepTrack_AI.Fullstack_Project.security.CustomUserDetails;
 import com.PrepTrack_AI.Fullstack_Project.security.JwtService;
 import com.PrepTrack_AI.Fullstack_Project.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Guard: duplicate email
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("User", "email", request.getEmail());
+            throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exists");
         }
 
         // Fetch ROLE_STUDENT
@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("=========================================================================");
 
         // Generate tokens for response
-        String accessToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(new CustomUserDetails(user));
         String refreshTokenValue = createRefreshToken(user);
 
         return ApiResponse.success(
@@ -105,12 +105,16 @@ public class AuthServiceImpl implements AuthService {
         log.info("Login attempt for email: {}", request.getEmail());
 
         // Authenticate credentials
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (org.springframework.security.authentication.BadCredentialsException ex) {
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
 
         // Invalidate older refresh tokens and generate a new one
         refreshTokenRepository.deleteByUser(user);
@@ -120,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.save(user);
 
-        String accessToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(new CustomUserDetails(user));
         log.info("Login successful for user: {}", user.getEmail());
 
         return ApiResponse.success(
@@ -136,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("Forgot password request for email: {}", request.getEmail());
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
 
         // Delete existing reset tokens
         passwordResetTokenRepository.deleteByUser(user);
@@ -165,11 +169,11 @@ public class AuthServiceImpl implements AuthService {
         log.info("Attempting to reset password using token...");
 
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(request.getToken())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid password reset token"));
+                .orElseThrow(() -> new BusinessException("Invalid password reset token"));
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             passwordResetTokenRepository.delete(resetToken);
-            throw new IllegalArgumentException("Password reset token has expired");
+            throw new TokenExpiredException("Password reset token has expired");
         }
 
         User user = resetToken.getUser();
@@ -190,10 +194,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("Change password request for user: {}", email);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Current password does not match");
+            throw new BusinessException("Current password does not match");
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -210,11 +214,11 @@ public class AuthServiceImpl implements AuthService {
         log.info("Token refresh request received");
 
         RefreshToken oldToken = refreshTokenRepository.findByToken(request.getRefreshToken())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+                .orElseThrow(() -> new BusinessException("Invalid refresh token"));
 
         if (oldToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(oldToken);
-            throw new IllegalArgumentException("Refresh token has expired. Please login again.");
+            throw new TokenExpiredException("Refresh token has expired. Please login again.");
         }
 
         User user = oldToken.getUser();
@@ -224,7 +228,7 @@ public class AuthServiceImpl implements AuthService {
         String newRefreshTokenValue = createRefreshToken(user);
 
         // Generate new short-lived access token
-        String newAccessToken = jwtService.generateToken(user);
+        String newAccessToken = jwtService.generateToken(new CustomUserDetails(user));
         log.info("Refresh token rotated successfully for user: {}", user.getEmail());
 
         TokenRefreshResponse response = TokenRefreshResponse.builder()
@@ -271,11 +275,11 @@ public class AuthServiceImpl implements AuthService {
         log.info("Verifying user email using token...");
 
         EmailVerificationToken verificationToken = emailVerificationTokenRepository.findByToken(request.getToken())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid verification token"));
+                .orElseThrow(() -> new BusinessException("Invalid verification token"));
 
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             emailVerificationTokenRepository.delete(verificationToken);
-            throw new IllegalArgumentException("Verification token has expired");
+            throw new TokenExpiredException("Verification token has expired");
         }
 
         User user = verificationToken.getUser();

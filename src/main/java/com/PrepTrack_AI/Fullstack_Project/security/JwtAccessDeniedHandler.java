@@ -7,40 +7,39 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
- * Handles authentication failures for requests reaching protected endpoints
- * without a valid JWT token.
+ * Handles access denied errors for authenticated requests reaching resources
+ * that require higher privileges.
  *
- * <p>Instead of the default HTML error page, this returns a structured JSON
- * {@link ApiResponse} with HTTP 401 Unauthorized.</p>
+ * <p>Returns a structured JSON response with HTTP 403 Forbidden status.</p>
  */
 @Component
 @Slf4j
-public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
+public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
-    public void commence(
+    public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException authException
+            AccessDeniedException accessDeniedException
     ) throws IOException {
 
-        log.warn("Unauthorized access to [{}]: {}", request.getRequestURI(), authException.getMessage());
+        log.warn("Access denied to [{}]: {}", request.getRequestURI(), accessDeniedException.getMessage());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.writeValue(
                 response.getOutputStream(),
-                ApiResponse.error("Access denied: Authentication required. Please provide a valid JWT token.")
+                ApiResponse.error("Access denied: You do not have permission to access this resource.")
         );
     }
 }

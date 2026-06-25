@@ -5,10 +5,6 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -35,7 +31,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity {
 
     // ─── Primary Key ─────────────────────────────────────────────────────────
 
@@ -121,44 +117,4 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_login_ip", length = 45)
     private String lastLoginIp;
 
-    // ─── Spring Security – UserDetails contract ───────────────────────────────
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new java.util.ArrayList<>();
-        if (role != null) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            if (role.getPermissions() != null) {
-                role.getPermissions().forEach(permission -> 
-                    authorities.add(new SimpleGrantedAuthority(permission.getName()))
-                );
-            }
-        }
-        return authorities;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return Boolean.TRUE.equals(accountNonExpired);
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return Boolean.TRUE.equals(accountNonLocked);
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return Boolean.TRUE.equals(credentialsNonExpired);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Boolean.TRUE.equals(enabled);
-    }
 }

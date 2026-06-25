@@ -5,7 +5,7 @@ import com.PrepTrack_AI.Fullstack_Project.dto.UpdateProfileRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileResponse;
 import com.PrepTrack_AI.Fullstack_Project.entity.Role;
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
-import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
+import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.repository.RoleRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +73,7 @@ class UserServiceImplTest {
     void getUserProfile_UserNotFound_ThrowsException() {
         when(userRepository.findByEmail("unknown@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> {
+        assertThrows(UserNotFoundException.class, () -> {
             userService.getUserProfile("unknown@example.com");
         });
     }

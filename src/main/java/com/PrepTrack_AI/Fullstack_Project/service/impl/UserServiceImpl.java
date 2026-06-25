@@ -7,6 +7,7 @@ import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileResponse;
 import com.PrepTrack_AI.Fullstack_Project.entity.Role;
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
 import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
+import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.repository.RoleRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import com.PrepTrack_AI.Fullstack_Project.service.UserService;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public ApiResponse<UserProfileResponse> getUserProfile(String email) {
         log.info("Fetching profile for user: {}", email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         return ApiResponse.success("Profile fetched successfully", mapToProfileResponse(user));
     }
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public ApiResponse<UserProfileResponse> updateUserProfile(String email, UpdateProfileRequest request) {
         log.info("Updating profile for user: {}", email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
         // Update profile fields
         user.setFullName(request.getFullName());
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
     public ApiResponse<UserProfileResponse> updateUserStatus(Long userId, UpdateUserStatusRequest request) {
         log.info("Updating status for user ID: {}", userId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if (request.getRoleName() != null) {
             Role role = roleRepository.findByName(request.getRoleName())

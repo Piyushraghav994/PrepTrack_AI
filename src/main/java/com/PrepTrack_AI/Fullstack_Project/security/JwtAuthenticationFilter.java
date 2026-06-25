@@ -1,8 +1,10 @@
 package com.PrepTrack_AI.Fullstack_Project.security;
 
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
+import com.PrepTrack_AI.Fullstack_Project.repository.RevokedTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,34 +16,22 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.PrepTrack_AI.Fullstack_Project.repository.RevokedTokenRepository;
 import java.io.IOException;
 
 /**
  * JWT authentication filter that intercepts every HTTP request exactly once.
- *
- * <p>Processing flow:</p>
- * <ol>
- *   <li>Read the {@code Authorization} header.</li>
- *   <li>If missing or not prefixed with {@code "Bearer "}, skip to next filter.</li>
- *   <li>Extract the JWT token and parse the username (email).</li>
- *   <li>Load {@link UserDetails} from the database.</li>
- *   <li>Validate the token — if valid, populate the {@link org.springframework.security.core.context.SecurityContext}.</li>
- *   <li>On any JWT error, write a clean 401 JSON response instead of a stack trace.</li>
- * </ol>
  */
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final RevokedTokenRepository revokedTokenRepository;
 
     @Override
@@ -91,6 +81,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
 
+        } catch (ExpiredJwtException ex) {
+            log.warn("JWT validation failed for request [{}]: Token has expired", request.getRequestURI());
+            writeUnauthorizedResponse(response, "JWT token has expired");
+            return;
         } catch (Exception ex) {
             // Log and return a clean 401 JSON — never let exceptions bubble up from filters
             log.warn("JWT validation failed for request [{}]: {}", request.getRequestURI(), ex.getMessage());
