@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.PrepTrack_AI.Fullstack_Project.repository.RevokedTokenRepository;
 import java.io.IOException;
 
 /**
@@ -41,6 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final RevokedTokenRepository revokedTokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -60,6 +62,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);  // strip "Bearer " prefix
 
         try {
+            // Check if token is blacklisted/revoked
+            if (revokedTokenRepository.existsByToken(jwt)) {
+                log.warn("JWT validation failed: Token is blacklisted/revoked");
+                writeUnauthorizedResponse(response, "Token is blacklisted/revoked");
+                return;
+            }
+
             final String userEmail = jwtService.extractUsername(jwt);
 
             // Only proceed if we have a username and the SecurityContext is not yet authenticated

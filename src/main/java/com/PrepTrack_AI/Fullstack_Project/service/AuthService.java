@@ -47,10 +47,7 @@ public interface AuthService {
      */
     ApiResponse<TokenRefreshResponse> refreshToken(RefreshTokenRequest request);
 
-    /**
-     * Logs out the user by deleting their database-backed refresh token.
-     */
-    ApiResponse<Void> logout(String refreshToken);
+    ApiResponse<Void> logout(String refreshToken, String authHeader);
 
     /**
      * Verifies the student email using a valid, non-expired verification token.
