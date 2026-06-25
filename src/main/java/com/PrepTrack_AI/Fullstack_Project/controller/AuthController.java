@@ -118,12 +118,13 @@ public class AuthController {
     @PostMapping("/logout")
     @Operation(
             summary = "Logout user",
-            description = "Signs out the user by deleting their database-backed refresh token."
+            description = "Signs out the user by deleting their database-backed refresh token and blacklisting their access token."
     )
     public ResponseEntity<ApiResponse<Void>> logout(
-            @Valid @RequestBody RefreshTokenRequest request) {
+            @Valid @RequestBody RefreshTokenRequest request,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        return ResponseEntity.ok(authService.logout(request.getRefreshToken()));
+        return ResponseEntity.ok(authService.logout(request.getRefreshToken(), authHeader));
     }
 
     /**

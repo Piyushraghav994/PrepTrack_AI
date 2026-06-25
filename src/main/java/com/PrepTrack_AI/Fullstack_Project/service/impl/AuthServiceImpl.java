@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RevokedTokenRepository revokedTokenRepository;
 
     // ── Register ──────────────────────────────────────────────────────────────
 
@@ -234,12 +235,32 @@ public class AuthServiceImpl implements AuthService {
         return ApiResponse.success("Tokens refreshed successfully", response);
     }
 
-    // ── Logout ────────────────────────────────────────────────────────────────
-
     @Override
-    public ApiResponse<Void> logout(String refreshToken) {
+    public ApiResponse<Void> logout(String refreshToken, String authHeader) {
         log.info("Logging out user token");
-        refreshTokenRepository.deleteByToken(refreshToken);
+        if (refreshToken != null) {
+            refreshTokenRepository.deleteByToken(refreshToken);
+        }
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String jwt = authHeader.substring(7);
+            try {
+                java.util.Date expirationDate = jwtService.extractExpiration(jwt);
+                java.time.LocalDateTime expiryLdt = expirationDate.toInstant()
+                        .atZone(java.time.ZoneId.systemDefault())
+                        .toLocalDateTime();
+
+                RevokedToken revokedToken = RevokedToken.builder()
+                        .token(jwt)
+                        .expiryDate(expiryLdt)
+                        .build();
+                revokedToken.setCreatedBy("SYSTEM");
+                revokedToken.setUpdatedBy("SYSTEM");
+                revokedTokenRepository.save(revokedToken);
+                log.info("Access token blacklisted successfully");
+            } catch (Exception e) {
+                log.warn("Failed to extract expiration or blacklist token: {}", e.getMessage());
+            }
+        }
         return ApiResponse.success("Logged out successfully");
     }
 
@@ -275,7 +296,7 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(tokenValue)
                 .user(user)
-                .expiryDate(LocalDateTime.now().plusDays(7)) // Valid for 7 days
+                .expiryDate(LocalDateTime.now().plusDays(30)) // Valid for 30 days
                 .build();
         refreshTokenRepository.save(refreshToken);
         return tokenValue;

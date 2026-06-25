@@ -22,4 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Used during registration to prevent duplicates.
      */
     boolean existsByEmail(String email);
+
+    /**
+     * Returns {@code true} if any user is associated with the given role ID.
+     */
+    boolean existsByRoleId(Long roleId);
 }
