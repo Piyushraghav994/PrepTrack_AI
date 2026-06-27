@@ -1,9 +1,10 @@
 package com.PrepTrack_AI.Fullstack_Project.controller;
 
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
-import com.PrepTrack_AI.Fullstack_Project.dto.UpdateProfileRequest;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserRequestDTO;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserResponseDTO;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileDTO;
 import com.PrepTrack_AI.Fullstack_Project.dto.UpdateUserStatusRequest;
-import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileResponse;
 import com.PrepTrack_AI.Fullstack_Project.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +34,7 @@ public class UserController {
             summary = "Get user profile",
             description = "Retrieves the profile information of the currently authenticated user."
     )
-    public ResponseEntity<ApiResponse<UserProfileResponse>> getProfile(Principal principal) {
+    public ResponseEntity<ApiResponse<UserProfileDTO>> getProfile(Principal principal) {
         return ResponseEntity.ok(userService.getUserProfile(principal.getName()));
     }
 
@@ -43,8 +44,8 @@ public class UserController {
             summary = "Update user profile",
             description = "Updates the profile information of the currently authenticated user."
     )
-    public ResponseEntity<ApiResponse<UserProfileResponse>> updateProfile(
-            @Valid @RequestBody UpdateProfileRequest request,
+    public ResponseEntity<ApiResponse<UserProfileDTO>> updateProfile(
+            @Valid @RequestBody UserRequestDTO request,
             Principal principal) {
         return ResponseEntity.ok(userService.updateUserProfile(principal.getName(), request));
     }
@@ -55,7 +56,7 @@ public class UserController {
             summary = "Get all users",
             description = "Retrieves a list of all platform user profiles. Admin only."
     )
-    public ResponseEntity<ApiResponse<List<UserProfileResponse>>> getAllUsers() {
+    public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -65,7 +66,7 @@ public class UserController {
             summary = "Update user status",
             description = "Updates a user's role or account security status flags (enabled, lock status, expiration). Admin only."
     )
-    public ResponseEntity<ApiResponse<UserProfileResponse>> updateUserStatus(
+    public ResponseEntity<ApiResponse<UserProfileDTO>> updateUserStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserStatusRequest request) {
         return ResponseEntity.ok(userService.updateUserStatus(id, request));

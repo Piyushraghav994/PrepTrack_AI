@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,8 +26,9 @@ import java.io.IOException;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // Check if token is blacklisted/revoked
             if (revokedTokenRepository.existsByToken(jwt)) {
-                log.warn("JWT validation failed: Token is blacklisted/revoked");
+                logger.warn("Invalid JWT token detected.");
                 writeUnauthorizedResponse(response, "Token is blacklisted/revoked");
                 return;
             }
@@ -72,22 +72,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     userDetails,
                                     null,                          // credentials (null after auth)
                                     userDetails.getAuthorities()
-                            );
+                                    );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     // Set authentication into the SecurityContext
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    log.debug("JWT authenticated user: {}", userEmail);
+                    logger.debug("JWT authenticated user: {}", userEmail);
                 }
             }
 
         } catch (ExpiredJwtException ex) {
-            log.warn("JWT validation failed for request [{}]: Token has expired", request.getRequestURI());
+            logger.warn("Expired JWT token.");
             writeUnauthorizedResponse(response, "JWT token has expired");
             return;
         } catch (Exception ex) {
             // Log and return a clean 401 JSON — never let exceptions bubble up from filters
-            log.warn("JWT validation failed for request [{}]: {}", request.getRequestURI(), ex.getMessage());
+            logger.warn("Invalid JWT token detected.");
             writeUnauthorizedResponse(response, "Invalid or expired JWT token");
             return;
         }

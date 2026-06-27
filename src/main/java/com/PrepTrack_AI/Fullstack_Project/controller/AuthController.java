@@ -32,8 +32,8 @@ public class AuthController {
             summary = "Register a new user",
             description = "Creates a new STUDENT account and returns access and refresh tokens."
     )
-    public ResponseEntity<ApiResponse<AuthResponse>> register(
-            @Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> register(
+            @Valid @RequestBody RegisterRequestDTO request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -48,7 +48,7 @@ public class AuthController {
             summary = "Login with existing credentials",
             description = "Authenticates the user and returns access and refresh tokens."
     )
-    public ResponseEntity<ApiResponse<AuthResponse>> login(
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> login(
             @Valid @RequestBody LoginRequest request) {
 
         return ResponseEntity.ok(authService.login(request));

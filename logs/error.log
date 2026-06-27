@@ -1,0 +1,4 @@
+2026-06-27 22:07:46.575 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-06-27 22:10:21.740 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-06-27 22:59:03.159 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-06-27 22:59:56.690 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com

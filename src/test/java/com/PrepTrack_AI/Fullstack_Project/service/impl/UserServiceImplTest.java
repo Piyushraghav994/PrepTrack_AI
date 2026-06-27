@@ -1,11 +1,13 @@
 package com.PrepTrack_AI.Fullstack_Project.service.impl;
 
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
-import com.PrepTrack_AI.Fullstack_Project.dto.UpdateProfileRequest;
-import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserRequestDTO;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserResponseDTO;
+import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileDTO;
 import com.PrepTrack_AI.Fullstack_Project.entity.Role;
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
 import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
+import com.PrepTrack_AI.Fullstack_Project.mapper.UserMapper;
 import com.PrepTrack_AI.Fullstack_Project.repository.RoleRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,9 @@ class UserServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -58,9 +63,16 @@ class UserServiceImplTest {
 
     @Test
     void getUserProfile_Success() {
-        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
+        UserProfileDTO profileDTO = UserProfileDTO.builder()
+                .fullName("John Doe")
+                .email("john.doe@example.com")
+                .role("ROLE_STUDENT")
+                .build();
 
-        ApiResponse<UserProfileResponse> response = userService.getUserProfile("john.doe@example.com");
+        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
+        when(userMapper.toProfileDTO(user)).thenReturn(profileDTO);
+
+        ApiResponse<UserProfileDTO> response = userService.getUserProfile("john.doe@example.com");
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
@@ -80,17 +92,25 @@ class UserServiceImplTest {
 
     @Test
     void updateUserProfile_Success() {
-        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        UpdateProfileRequest updateRequest = UpdateProfileRequest.builder()
+        UserProfileDTO updatedProfileDTO = UserProfileDTO.builder()
                 .fullName("John Updated")
                 .college("New College")
                 .branch("Mechanical")
                 .passoutYear(2026)
                 .build();
 
-        ApiResponse<UserProfileResponse> response = userService.updateUserProfile("john.doe@example.com", updateRequest);
+        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userMapper.toProfileDTO(any(User.class))).thenReturn(updatedProfileDTO);
+
+        UserRequestDTO updateRequest = UserRequestDTO.builder()
+                .fullName("John Updated")
+                .college("New College")
+                .branch("Mechanical")
+                .passoutYear(2026)
+                .build();
+
+        ApiResponse<UserProfileDTO> response = userService.updateUserProfile("john.doe@example.com", updateRequest);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());

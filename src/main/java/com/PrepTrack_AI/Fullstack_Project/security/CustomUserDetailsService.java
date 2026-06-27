@@ -1,7 +1,6 @@
 package com.PrepTrack_AI.Fullstack_Project.security;
 
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
-import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(
+                .orElseThrow(() -> new UsernameNotFoundException(
                         "No user found with email: " + email));
         return new CustomUserDetails(user);
     }
