@@ -1,11 +1,7 @@
 package com.PrepTrack_AI.Fullstack_Project.config;
 
-import com.PrepTrack_AI.Fullstack_Project.entity.Permission;
-import com.PrepTrack_AI.Fullstack_Project.entity.Role;
-import com.PrepTrack_AI.Fullstack_Project.entity.User;
-import com.PrepTrack_AI.Fullstack_Project.repository.PermissionRepository;
-import com.PrepTrack_AI.Fullstack_Project.repository.RoleRepository;
-import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
+import com.PrepTrack_AI.Fullstack_Project.entity.*;
+import com.PrepTrack_AI.Fullstack_Project.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -15,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
- * Initializes database with default Roles, Permissions, and a default Admin user.
+ * Initializes database with default Roles, Permissions, a default Admin user,
+ * and sample Interviews and Interview Questions.
  */
 @Component
 @RequiredArgsConstructor
@@ -29,6 +25,8 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final InterviewRepository interviewRepository;
+    private final InterviewQuestionRepository interviewQuestionRepository;
 
     @Override
     @Transactional
@@ -86,6 +84,76 @@ public class DatabaseInitializer implements CommandLineRunner {
             admin.setUpdatedBy("SYSTEM");
             userRepository.save(admin);
             log.info("Seeded default admin user: {}", adminEmail);
+        }
+
+        // 4. Seed Default Interviews & Questions
+        if (interviewRepository.count() == 0) {
+            log.info("No interviews found. Seeding sample interviews and questions...");
+
+            // Seeding Java Backend Interview
+            Interview javaInterview = Interview.builder()
+                    .title("Java Backend Engineer Mock Interview")
+                    .company("Google")
+                    .role("Software Engineer")
+                    .difficulty(Difficulty.MEDIUM)
+                    .description("Comprehensive assessment of Java Core, Spring Boot, Concurrency, and System Design concepts.")
+                    .build();
+            javaInterview = interviewRepository.save(javaInterview);
+
+            InterviewQuestion q1 = InterviewQuestion.builder()
+                    .question("Explain the difference between Optimistic and Pessimistic locking.")
+                    .answer("Optimistic locking assumes multiple transactions can complete without affecting each other. It uses a version field. Pessimistic locking locks records so no other transaction can read/write until it's released.")
+                    .topic("Database")
+                    .category("Systems")
+                    .interview(javaInterview)
+                    .build();
+
+            InterviewQuestion q2 = InterviewQuestion.builder()
+                    .question("What is the difference between a HashMap and ConcurrentHashMap in Java?")
+                    .answer("HashMap is not thread-safe. ConcurrentHashMap is thread-safe and utilizes bucket-level locking or CAS operations to allow highly concurrent reads and writes without locking the entire table.")
+                    .topic("Java")
+                    .category("Core")
+                    .interview(javaInterview)
+                    .build();
+
+            InterviewQuestion q3 = InterviewQuestion.builder()
+                    .question("Explain Spring Boot starter dependency mechanism.")
+                    .answer("Starters are a set of convenient dependency descriptors that you can include in your application. They configure all the necessary jars and default auto-configurations under the hood.")
+                    .topic("Spring Boot")
+                    .category("Frameworks")
+                    .interview(javaInterview)
+                    .build();
+
+            interviewQuestionRepository.saveAll(List.of(q1, q2, q3));
+
+            // Seeding Frontend React Interview
+            Interview reactInterview = Interview.builder()
+                    .title("Frontend React Developer Mock Interview")
+                    .company("Meta")
+                    .role("Frontend Developer")
+                    .difficulty(Difficulty.EASY)
+                    .description("Basic assessment of DOM manipulation, component lifecycle, state management, and basic React hooks.")
+                    .build();
+            reactInterview = interviewRepository.save(reactInterview);
+
+            InterviewQuestion q4 = InterviewQuestion.builder()
+                    .question("What are React Hooks and why were they introduced?")
+                    .answer("Hooks allow you to use state and other React features in functional components without writing a class. They solve problems of code reuse, complex components, and confusing classes.")
+                    .topic("React")
+                    .category("Core")
+                    .interview(reactInterview)
+                    .build();
+
+            InterviewQuestion q5 = InterviewQuestion.builder()
+                    .question("Explain the virtual DOM.")
+                    .answer("The virtual DOM is a programming concept where a virtual representation of the UI is kept in memory and synced with the real DOM by a library such as ReactDOM.")
+                    .topic("React")
+                    .category("Core")
+                    .interview(reactInterview)
+                    .build();
+
+            interviewQuestionRepository.saveAll(List.of(q4, q5));
+            log.info("Seeded 2 mock interviews and 5 questions.");
         }
 
         log.info("Database seeding completed successfully.");

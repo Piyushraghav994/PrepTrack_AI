@@ -279,3 +279,159 @@
 2026-06-27 22:59:56.819 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-06-27 22:59:56.852 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2026-06-27 22:59:56.859 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-06-28 22:28:56.427 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-06-28 22:28:56.478 [main] INFO  c.P.F.FullstackProjectApplicationTests - Starting FullstackProjectApplicationTests using Java 26.0.1 with PID 20508 (started by dell in C:\Users\dell\OneDrive\Desktop\PrepTrack_AI\PrepTrack_AI)
+2026-06-28 22:28:56.480 [main] INFO  c.P.F.FullstackProjectApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-06-28 22:28:59.527 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-28 22:28:59.801 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 250 ms. Found 8 JPA repository interfaces.
+2026-06-28 22:29:01.386 [main] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-06-28 22:29:01.572 [main] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-06-28 22:29:02.705 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-28 22:29:02.799 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-28 22:29:03.289 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:preptrack_db user=SA
+2026-06-28 22:29:03.292 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-28 22:29:03.372 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-28 22:29:03.427 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:preptrack_db]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: PREPTRACK_DB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-28 22:29:06.103 [main] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-28 22:29:06.274 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 22:29:06.471 [main] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-28 22:29:07.552 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-28 22:29:07.553 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-28 22:29:10.839 [main] INFO  c.P.F.FullstackProjectApplicationTests - Started FullstackProjectApplicationTests in 15.376 seconds (process running for 18.077)
+2026-06-28 22:29:10.865 [main] INFO  c.P.F.config.DatabaseInitializer - Starting database seeding initializer...
+2026-06-28 22:29:11.906 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: USER_READ
+2026-06-28 22:29:11.920 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: USER_WRITE
+2026-06-28 22:29:11.923 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: INTERVIEW_CREATE
+2026-06-28 22:29:11.929 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: INTERVIEW_DELETE
+2026-06-28 22:29:11.933 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: ADMIN_ACCESS
+2026-06-28 22:29:11.958 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default role: ROLE_STUDENT
+2026-06-28 22:29:11.969 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default role: ROLE_ADMIN
+2026-06-28 22:29:12.166 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default admin user: admin@preptrack.com
+2026-06-28 22:29:12.166 [main] INFO  c.P.F.config.DatabaseInitializer - Database seeding completed successfully.
+2026-06-28 22:29:13.287 [main] INFO  c.P.F.a.s.impl.AuditServiceImpl - User [john.doe@example.com] performed CREATE_USER on User entity with id=100 (SUCCESS)
+2026-06-28 22:29:13.832 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Logging out user token
+2026-06-28 22:29:13.833 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Access token blacklisted successfully
+2026-06-28 22:29:13.882 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Logging out user token
+2026-06-28 22:29:14.200 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Creating permission with name: INTERVIEW_CREATE
+2026-06-28 22:29:14.234 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 1
+2026-06-28 22:29:14.246 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Creating permission with name: NEW_PERMISSION
+2026-06-28 22:29:14.248 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Permission created successfully: NEW_PERMISSION
+2026-06-28 22:29:14.366 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 1
+2026-06-28 22:29:14.367 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Permission deleted successfully: INTERVIEW_CREATE
+2026-06-28 22:29:14.382 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Fetching all permissions
+2026-06-28 22:29:14.395 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 2
+2026-06-28 22:29:14.630 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Creating role with name: ROLE_NEW
+2026-06-28 22:29:14.632 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role created successfully: ROLE_NEW
+2026-06-28 22:29:14.684 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 1
+2026-06-28 22:29:14.696 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 1
+2026-06-28 22:29:14.697 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role deleted successfully: ROLE_CUSTOM
+2026-06-28 22:29:14.709 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Updating role with ID: 1
+2026-06-28 22:29:14.711 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role updated successfully: ROLE_CUSTOM_UPDATED
+2026-06-28 22:29:14.719 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching role with ID: 1
+2026-06-28 22:29:14.732 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 10
+2026-06-28 22:29:14.738 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Updating role with ID: 10
+2026-06-28 22:29:14.746 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching role with ID: 2
+2026-06-28 22:29:14.753 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Creating role with name: ROLE_CUSTOM
+2026-06-28 22:29:14.765 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching all roles
+2026-06-28 22:29:14.884 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-06-28 22:29:14.963 [main] INFO  c.P.F.service.impl.UserServiceImpl - Updating profile for user: john.doe@example.com
+2026-06-28 22:29:14.965 [main] INFO  c.P.F.service.impl.UserServiceImpl - Profile updated successfully for user: john.doe@example.com
+2026-06-28 22:29:15.127 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 22:29:15.183 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-06-28 22:29:15.187 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-06-28 22:35:15.167 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.1.0.Final
+2026-06-28 22:35:15.234 [main] INFO  c.P.F.FullstackProjectApplicationTests - Starting FullstackProjectApplicationTests using Java 26.0.1 with PID 3708 (started by dell in C:\Users\dell\OneDrive\Desktop\PrepTrack_AI\PrepTrack_AI)
+2026-06-28 22:35:15.235 [main] INFO  c.P.F.FullstackProjectApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2026-06-28 22:35:20.407 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-28 22:35:20.955 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 512 ms. Found 15 JPA repository interfaces.
+2026-06-28 22:35:23.385 [main] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-06-28 22:35:23.504 [main] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-06-28 22:35:24.326 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-28 22:35:24.428 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-28 22:35:24.868 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:preptrack_db user=SA
+2026-06-28 22:35:24.871 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-28 22:35:24.928 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-28 22:35:24.990 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:preptrack_db]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: PREPTRACK_DB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-28 22:35:30.594 [main] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-28 22:35:30.964 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 22:35:31.160 [main] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-28 22:35:32.117 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-28 22:35:32.117 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-28 22:35:36.542 [main] INFO  c.P.F.FullstackProjectApplicationTests - Started FullstackProjectApplicationTests in 21.992 seconds (process running for 24.074)
+2026-06-28 22:35:36.566 [main] INFO  c.P.F.config.DatabaseInitializer - Starting database seeding initializer...
+2026-06-28 22:35:37.342 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: USER_READ
+2026-06-28 22:35:37.354 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: USER_WRITE
+2026-06-28 22:35:37.358 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: INTERVIEW_CREATE
+2026-06-28 22:35:37.362 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: INTERVIEW_DELETE
+2026-06-28 22:35:37.364 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded permission: ADMIN_ACCESS
+2026-06-28 22:35:37.391 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default role: ROLE_STUDENT
+2026-06-28 22:35:37.399 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default role: ROLE_ADMIN
+2026-06-28 22:35:37.598 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded default admin user: admin@preptrack.com
+2026-06-28 22:35:37.637 [main] INFO  c.P.F.config.DatabaseInitializer - No interviews found. Seeding sample interviews and questions...
+2026-06-28 22:35:37.661 [main] INFO  c.P.F.config.DatabaseInitializer - Seeded 2 mock interviews and 5 questions.
+2026-06-28 22:35:37.662 [main] INFO  c.P.F.config.DatabaseInitializer - Database seeding completed successfully.
+2026-06-28 22:35:38.764 [main] INFO  c.P.F.a.s.impl.AuditServiceImpl - User [john.doe@example.com] performed CREATE_USER on User entity with id=100 (SUCCESS)
+2026-06-28 22:35:39.464 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Logging out user token
+2026-06-28 22:35:39.466 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Access token blacklisted successfully
+2026-06-28 22:35:39.494 [main] INFO  c.P.F.service.impl.AuthServiceImpl - Logging out user token
+2026-06-28 22:35:40.171 [main] INFO  c.P.F.s.impl.InterviewServiceImpl - Adding question to interview with ID: 1
+2026-06-28 22:35:40.176 [main] INFO  c.P.F.s.impl.InterviewServiceImpl - Question added successfully with ID: 10
+2026-06-28 22:35:40.197 [main] INFO  c.P.F.s.impl.InterviewServiceImpl - Creating new interview: Java Interview
+2026-06-28 22:35:40.198 [main] INFO  c.P.F.s.impl.InterviewServiceImpl - Interview created successfully with ID: 1
+2026-06-28 22:35:40.701 [main] INFO  c.P.F.s.i.InterviewSessionServiceImpl - Starting interview session for user: student@example.com on interview: 2
+2026-06-28 22:35:40.704 [main] INFO  c.P.F.s.i.InterviewSessionServiceImpl - Interview session started with ID: 3
+2026-06-28 22:35:40.763 [main] INFO  c.P.F.s.i.InterviewSessionServiceImpl - Submitting interview session with ID: 3, score: 85
+2026-06-28 22:35:40.768 [main] INFO  c.P.F.s.i.InterviewSessionServiceImpl - Interview session ID 3 submitted successfully
+2026-06-28 22:35:40.989 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Creating permission with name: INTERVIEW_CREATE
+2026-06-28 22:35:40.997 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 1
+2026-06-28 22:35:41.011 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Creating permission with name: NEW_PERMISSION
+2026-06-28 22:35:41.012 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Permission created successfully: NEW_PERMISSION
+2026-06-28 22:35:41.054 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 1
+2026-06-28 22:35:41.055 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Permission deleted successfully: INTERVIEW_CREATE
+2026-06-28 22:35:41.063 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Fetching all permissions
+2026-06-28 22:35:41.081 [main] INFO  c.P.F.s.impl.PermissionServiceImpl - Deleting permission with ID: 2
+2026-06-28 22:35:41.651 [main] INFO  c.P.F.service.impl.ResumeServiceImpl - Uploading resume for user: student@example.com
+2026-06-28 22:35:41.653 [main] INFO  c.P.F.service.impl.ResumeServiceImpl - Resume saved successfully with ID: 2
+2026-06-28 22:35:41.728 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Creating role with name: ROLE_NEW
+2026-06-28 22:35:41.740 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role created successfully: ROLE_NEW
+2026-06-28 22:35:41.773 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 1
+2026-06-28 22:35:41.787 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 1
+2026-06-28 22:35:41.790 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role deleted successfully: ROLE_CUSTOM
+2026-06-28 22:35:41.811 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Updating role with ID: 1
+2026-06-28 22:35:41.821 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Role updated successfully: ROLE_CUSTOM_UPDATED
+2026-06-28 22:35:41.840 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching role with ID: 1
+2026-06-28 22:35:41.854 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Deleting role with ID: 10
+2026-06-28 22:35:41.864 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Updating role with ID: 10
+2026-06-28 22:35:41.878 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching role with ID: 2
+2026-06-28 22:35:41.909 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Creating role with name: ROLE_CUSTOM
+2026-06-28 22:35:41.924 [main] INFO  c.P.F.service.impl.RoleServiceImpl - Fetching all roles
+2026-06-28 22:35:42.228 [main] INFO  c.P.F.s.impl.UserProgressServiceImpl - Updating progress for user: student@example.com after completing interview session with score: 90, questions: 5
+2026-06-28 22:35:42.229 [main] INFO  c.P.F.s.impl.UserProgressServiceImpl - Progress updated successfully. Total score: 175, current streak: 2
+2026-06-28 22:35:42.324 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-06-28 22:35:42.339 [main] INFO  c.P.F.service.impl.UserServiceImpl - Updating profile for user: john.doe@example.com
+2026-06-28 22:35:42.341 [main] INFO  c.P.F.service.impl.UserServiceImpl - Profile updated successfully for user: john.doe@example.com
+2026-06-28 22:35:42.424 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 22:35:42.454 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-06-28 22:35:42.462 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
