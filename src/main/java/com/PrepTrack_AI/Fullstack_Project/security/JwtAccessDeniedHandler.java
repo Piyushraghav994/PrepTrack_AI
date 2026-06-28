@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -20,8 +19,9 @@ import java.io.IOException;
  * <p>Returns a structured JSON response with HTTP 403 Forbidden status.</p>
  */
 @Component
-@Slf4j
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(JwtAccessDeniedHandler.class);
 
     @Override
     public void handle(
@@ -30,7 +30,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
             AccessDeniedException accessDeniedException
     ) throws IOException {
 
-        log.warn("Access denied to [{}]: {}", request.getRequestURI(), accessDeniedException.getMessage());
+        logger.warn("Forbidden API access attempt to resource: {}", request.getRequestURI());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

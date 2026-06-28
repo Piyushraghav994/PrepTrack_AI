@@ -6,6 +6,7 @@ import com.PrepTrack_AI.Fullstack_Project.entity.RevokedToken;
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
 import com.PrepTrack_AI.Fullstack_Project.repository.RefreshTokenRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.RevokedTokenRepository;
+import com.PrepTrack_AI.Fullstack_Project.mapper.AuthMapper;
 import com.PrepTrack_AI.Fullstack_Project.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ class AuthServiceImplTest {
 
     @Mock
     private JwtService jwtService;
+
+    @Mock
+    private AuthMapper authMapper;
 
     @InjectMocks
     private AuthServiceImpl authService;

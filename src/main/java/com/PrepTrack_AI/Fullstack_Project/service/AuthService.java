@@ -13,19 +13,19 @@ public interface AuthService {
      * Registers a new user account.
      *
      * @param request validated registration payload
-     * @return {@link ApiResponse} wrapping an {@link AuthResponse} with a JWT token
+     * @return {@link ApiResponse} wrapping an {@link AuthResponseDTO} with a JWT token
      * @throws com.PrepTrack_AI.Fullstack_Project.exception.DuplicateResourceException if email is already registered
      */
-    ApiResponse<AuthResponse> register(RegisterRequest request);
+    ApiResponse<AuthResponseDTO> register(RegisterRequestDTO request);
 
     /**
      * Authenticates an existing user with their credentials.
      *
      * @param request validated login payload
-     * @return {@link ApiResponse} wrapping an {@link AuthResponse} with a JWT token
+     * @return {@link ApiResponse} wrapping an {@link AuthResponseDTO} with a JWT token
      * @throws org.springframework.security.authentication.BadCredentialsException on invalid credentials
      */
-    ApiResponse<AuthResponse> login(LoginRequest request);
+    ApiResponse<AuthResponseDTO> login(LoginRequest request);
 
     /**
      * Initiates the forgot password workflow by generating and logging a reset token.
