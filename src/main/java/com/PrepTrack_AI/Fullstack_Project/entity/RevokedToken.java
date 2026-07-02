@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(name = "uk_revoked_tokens_token", columnNames = "token")
         },
         indexes = {
-                @Index(name = "idx_revoked_tokens_token", columnList = "token")
+                @Index(name = "idx_revoked_tokens_token", columnList = "token"),
+                @Index(name = "idx_revoked_tokens_created_at", columnList = "created_at")
         }
 )
 @Getter

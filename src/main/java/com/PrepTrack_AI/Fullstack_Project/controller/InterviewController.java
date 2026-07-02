@@ -43,10 +43,12 @@ public class InterviewController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get all Interviews", description = "Retrieves all interviews, optionally filtered by difficulty or role.")
-    public ResponseEntity<ApiResponse<List<InterviewResponseDTO>>> getAllInterviews(
+    public ResponseEntity<ApiResponse<PagedResponse<InterviewResponseDTO>>> getAllInterviews(
             @RequestParam(required = false) Difficulty difficulty,
-            @RequestParam(required = false) String role) {
-        return ResponseEntity.ok(interviewService.getAllInterviews(difficulty, role));
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(interviewService.getAllInterviews(difficulty, role, page, size));
     }
 
     @PutMapping("/{id}")
@@ -78,9 +80,11 @@ public class InterviewController {
     @GetMapping("/{id}/questions")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get questions for an Interview", description = "Retrieves all questions associated with an interview.")
-    public ResponseEntity<ApiResponse<List<InterviewQuestionResponseDTO>>> getQuestionsByInterview(
-            @PathVariable Long id) {
-        return ResponseEntity.ok(interviewService.getQuestionsByInterview(id));
+    public ResponseEntity<ApiResponse<PagedResponse<InterviewQuestionResponseDTO>>> getQuestionsByInterview(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(interviewService.getQuestionsByInterview(id, page, size));
     }
 
     @PutMapping("/questions/{questionId}")

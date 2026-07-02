@@ -16,7 +16,8 @@ import lombok.*;
                 @UniqueConstraint(name = "uk_permissions_name", columnNames = "name")
         },
         indexes = {
-                @Index(name = "idx_permissions_name", columnList = "name")
+                @Index(name = "idx_permissions_name", columnList = "name"),
+                @Index(name = "idx_permissions_created_at", columnList = "created_at")
         }
 )
 @Getter

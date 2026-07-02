@@ -7,7 +7,12 @@ import lombok.*;
  * JPA entity representing a Resume Analysis (ATS parsing, score, suggestions).
  */
 @Entity
-@Table(name = "resume_analyses")
+@Table(
+        name = "resume_analyses",
+        indexes = {
+                @Index(name = "idx_resume_analyses_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +25,7 @@ public class ResumeAnalysis extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resume_id", nullable = false)
+    @JoinColumn(name = "resume_id", nullable = false, foreignKey = @ForeignKey(name = "fk_resume_analyses_resume"))
     private Resume resume;
 
     @Column(name = "ats_score", nullable = false)

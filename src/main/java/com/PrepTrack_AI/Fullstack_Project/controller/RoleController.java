@@ -3,6 +3,7 @@ package com.PrepTrack_AI.Fullstack_Project.controller;
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
 import com.PrepTrack_AI.Fullstack_Project.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +34,10 @@ public class RoleController {
             summary = "Get all roles",
             description = "Retrieves a list of all roles in the system, along with their mapped permissions."
     )
-    public ResponseEntity<ApiResponse<List<RoleResponse>>> getAllRoles() {
-        return ResponseEntity.ok(roleService.getAllRoles());
+    public ResponseEntity<ApiResponse<PagedResponse<RoleResponse>>> getAllRoles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(roleService.getAllRoles(page, size));
     }
 
     @GetMapping("/{id}")

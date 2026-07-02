@@ -8,6 +8,7 @@ import com.PrepTrack_AI.Fullstack_Project.repository.InterviewRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.InterviewSessionRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import com.PrepTrack_AI.Fullstack_Project.service.UserProgressService;
+import com.PrepTrack_AI.Fullstack_Project.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +44,9 @@ class InterviewSessionServiceImplTest {
 
     @Mock
     private UserProgressService userProgressService;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private InterviewSessionServiceImpl interviewSessionService;

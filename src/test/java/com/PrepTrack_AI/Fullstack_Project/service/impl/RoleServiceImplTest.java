@@ -60,15 +60,16 @@ class RoleServiceImplTest {
 
     @Test
     void getAllRoles_Success() {
-        when(roleRepository.findAll()).thenReturn(List.of(testRole));
+        org.springframework.data.domain.Page<Role> page = new org.springframework.data.domain.PageImpl<>(List.of(testRole));
+        when(roleRepository.findAll(any(org.springframework.data.domain.Pageable.class))).thenReturn(page);
 
-        ApiResponse<List<RoleResponse>> response = roleService.getAllRoles();
+        ApiResponse<com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse<RoleResponse>> response = roleService.getAllRoles(0, 10);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().size());
-        assertEquals("ROLE_CUSTOM", response.getData().get(0).getName());
-        assertTrue(response.getData().get(0).getPermissions().contains("USER_READ"));
+        assertEquals(1, response.getData().getContent().size());
+        assertEquals("ROLE_CUSTOM", response.getData().getContent().get(0).getName());
+        assertTrue(response.getData().getContent().get(0).getPermissions().contains("USER_READ"));
     }
 
     @Test

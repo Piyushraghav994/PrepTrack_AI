@@ -3,6 +3,10 @@ package com.PrepTrack_AI.Fullstack_Project.service.impl;
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
 import com.PrepTrack_AI.Fullstack_Project.dto.PermissionRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.PermissionResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import com.PrepTrack_AI.Fullstack_Project.entity.Permission;
 import com.PrepTrack_AI.Fullstack_Project.exception.DuplicateResourceException;
 import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
@@ -31,13 +35,24 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<PermissionResponse>> getAllPermissions() {
-        log.info("Fetching all permissions");
-        List<Permission> permissions = permissionRepository.findAll();
-        List<PermissionResponse> responses = permissions.stream()
+    public ApiResponse<PagedResponse<PermissionResponse>> getAllPermissions(int page, int size) {
+        log.info("Fetching all permissions, page: {}, size: {}", page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Permission> permissionPage = permissionRepository.findAll(pageable);
+        List<PermissionResponse> content = permissionPage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
-        return ApiResponse.success("Permissions fetched successfully", responses);
+
+        PagedResponse<PermissionResponse> response = PagedResponse.<PermissionResponse>builder()
+                .content(content)
+                .pageNumber(permissionPage.getNumber())
+                .pageSize(permissionPage.getSize())
+                .totalElements(permissionPage.getTotalElements())
+                .totalPages(permissionPage.getTotalPages())
+                .last(permissionPage.isLast())
+                .build();
+
+        return ApiResponse.success("Permissions fetched successfully", response);
     }
 
     @Override

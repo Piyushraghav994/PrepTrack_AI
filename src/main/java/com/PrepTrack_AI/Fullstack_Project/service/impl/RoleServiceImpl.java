@@ -3,6 +3,10 @@ package com.PrepTrack_AI.Fullstack_Project.service.impl;
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import com.PrepTrack_AI.Fullstack_Project.entity.Permission;
 import com.PrepTrack_AI.Fullstack_Project.entity.Role;
 import com.PrepTrack_AI.Fullstack_Project.exception.DuplicateResourceException;
@@ -38,13 +42,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<RoleResponse>> getAllRoles() {
-        log.info("Fetching all roles");
-        List<Role> roles = roleRepository.findAll();
-        List<RoleResponse> responses = roles.stream()
+    public ApiResponse<PagedResponse<RoleResponse>> getAllRoles(int page, int size) {
+        log.info("Fetching all roles in system, page: {}, size: {}", page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Role> rolePage = roleRepository.findAll(pageable);
+        List<RoleResponse> content = rolePage.getContent().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
-        return ApiResponse.success("Roles fetched successfully", responses);
+
+        PagedResponse<RoleResponse> response = PagedResponse.<RoleResponse>builder()
+                .content(content)
+                .pageNumber(rolePage.getNumber())
+                .pageSize(rolePage.getSize())
+                .totalElements(rolePage.getTotalElements())
+                .totalPages(rolePage.getTotalPages())
+                .last(rolePage.isLast())
+                .build();
+
+        return ApiResponse.success("Roles fetched successfully", response);
     }
 
     @Override

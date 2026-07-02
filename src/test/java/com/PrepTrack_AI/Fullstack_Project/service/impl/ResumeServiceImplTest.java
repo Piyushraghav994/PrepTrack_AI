@@ -11,6 +11,8 @@ import com.PrepTrack_AI.Fullstack_Project.repository.ResumeAnalysisRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.ResumeRepository;
 import com.PrepTrack_AI.Fullstack_Project.repository.UserRepository;
 import com.PrepTrack_AI.Fullstack_Project.service.UserProgressService;
+import com.PrepTrack_AI.Fullstack_Project.service.NotificationService;
+import com.PrepTrack_AI.Fullstack_Project.storage.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +44,12 @@ class ResumeServiceImplTest {
 
     @Mock
     private UserProgressService userProgressService;
+
+    @Mock
+    private StorageService storageService;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private ResumeServiceImpl resumeService;

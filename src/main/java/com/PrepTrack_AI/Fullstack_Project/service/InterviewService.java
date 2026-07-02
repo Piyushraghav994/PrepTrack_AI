@@ -14,7 +14,7 @@ public interface InterviewService {
 
     ApiResponse<InterviewResponseDTO> getInterviewById(Long id);
 
-    ApiResponse<List<InterviewResponseDTO>> getAllInterviews(Difficulty difficulty, String role);
+    ApiResponse<PagedResponse<InterviewResponseDTO>> getAllInterviews(Difficulty difficulty, String role, int page, int size);
 
     ApiResponse<InterviewResponseDTO> updateInterview(Long id, InterviewRequestDTO request);
 
@@ -22,7 +22,7 @@ public interface InterviewService {
 
     ApiResponse<InterviewQuestionResponseDTO> addQuestionToInterview(InterviewQuestionRequestDTO request);
 
-    ApiResponse<List<InterviewQuestionResponseDTO>> getQuestionsByInterview(Long interviewId);
+    ApiResponse<PagedResponse<InterviewQuestionResponseDTO>> getQuestionsByInterview(Long interviewId, int page, int size);
 
     ApiResponse<InterviewQuestionResponseDTO> updateQuestion(Long questionId, InterviewQuestionRequestDTO request);
 

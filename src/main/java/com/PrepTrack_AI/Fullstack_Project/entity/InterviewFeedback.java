@@ -7,7 +7,12 @@ import lombok.*;
  * JPA entity representing Interview Feedback.
  */
 @Entity
-@Table(name = "interview_feedbacks")
+@Table(
+        name = "interview_feedbacks",
+        indexes = {
+                @Index(name = "idx_interview_feedbacks_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +25,7 @@ public class InterviewFeedback extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "session_id", nullable = false)
+    @JoinColumn(name = "session_id", nullable = false, foreignKey = @ForeignKey(name = "fk_interview_feedbacks_session"))
     private InterviewSession session;
 
     @Column(name = "strengths", nullable = false, columnDefinition = "TEXT")

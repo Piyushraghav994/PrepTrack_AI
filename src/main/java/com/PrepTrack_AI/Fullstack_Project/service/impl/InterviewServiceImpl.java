@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,23 +55,35 @@ public class InterviewServiceImpl implements InterviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<InterviewResponseDTO>> getAllInterviews(Difficulty difficulty, String role) {
-        log.debug("Fetching all interviews. Filter by difficulty: {}, role: {}", difficulty, role);
-        List<Interview> interviews;
-        if (difficulty != null) {
-            interviews = interviewRepository.findByDifficulty(difficulty);
+    public ApiResponse<PagedResponse<InterviewResponseDTO>> getAllInterviews(Difficulty difficulty, String role, int page, int size) {
+        log.debug("Fetching all interviews. Filter by difficulty: {}, role: {}, page: {}, size: {}", difficulty, role, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Interview> interviewPage;
+
+        boolean hasRole = role != null && !role.isBlank();
+
+        if (difficulty != null && hasRole) {
+            interviewPage = interviewRepository.findByDifficultyAndRoleContainingIgnoreCase(difficulty, role, pageable);
+        } else if (difficulty != null) {
+            interviewPage = interviewRepository.findByDifficulty(difficulty, pageable);
+        } else if (hasRole) {
+            interviewPage = interviewRepository.findByRoleContainingIgnoreCase(role, pageable);
         } else {
-            interviews = interviewRepository.findAll();
+            interviewPage = interviewRepository.findAll(pageable);
         }
 
-        if (role != null && !role.isBlank()) {
-            interviews = interviews.stream()
-                    .filter(i -> i.getRole().toLowerCase().contains(role.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
+        List<InterviewResponseDTO> content = interviewMapper.toResponseDTOList(interviewPage.getContent());
 
-        List<InterviewResponseDTO> dtos = interviewMapper.toResponseDTOList(interviews);
-        return ApiResponse.success("Interviews retrieved successfully", dtos);
+        PagedResponse<InterviewResponseDTO> response = PagedResponse.<InterviewResponseDTO>builder()
+                .content(content)
+                .pageNumber(interviewPage.getNumber())
+                .pageSize(interviewPage.getSize())
+                .totalElements(interviewPage.getTotalElements())
+                .totalPages(interviewPage.getTotalPages())
+                .last(interviewPage.isLast())
+                .build();
+
+        return ApiResponse.success("Interviews retrieved successfully", response);
     }
 
     @Override
@@ -108,14 +123,25 @@ public class InterviewServiceImpl implements InterviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<InterviewQuestionResponseDTO>> getQuestionsByInterview(Long interviewId) {
-        log.debug("Fetching questions for interview ID: {}", interviewId);
+    public ApiResponse<PagedResponse<InterviewQuestionResponseDTO>> getQuestionsByInterview(Long interviewId, int page, int size) {
+        log.debug("Fetching questions for interview ID: {}, page: {}, size: {}", interviewId, page, size);
         if (!interviewRepository.existsById(interviewId)) {
             throw new ResourceNotFoundException("Interview", "id", interviewId);
         }
-        List<InterviewQuestion> questions = interviewQuestionRepository.findByInterviewId(interviewId);
-        List<InterviewQuestionResponseDTO> dtos = interviewQuestionMapper.toResponseDTOList(questions);
-        return ApiResponse.success("Questions retrieved successfully", dtos);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InterviewQuestion> questionPage = interviewQuestionRepository.findByInterviewId(interviewId, pageable);
+        List<InterviewQuestionResponseDTO> content = interviewQuestionMapper.toResponseDTOList(questionPage.getContent());
+
+        PagedResponse<InterviewQuestionResponseDTO> response = PagedResponse.<InterviewQuestionResponseDTO>builder()
+                .content(content)
+                .pageNumber(questionPage.getNumber())
+                .pageSize(questionPage.getSize())
+                .totalElements(questionPage.getTotalElements())
+                .totalPages(questionPage.getTotalPages())
+                .last(questionPage.isLast())
+                .build();
+
+        return ApiResponse.success("Questions retrieved successfully", response);
     }
 
     @Override

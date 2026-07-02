@@ -7,6 +7,8 @@ import com.PrepTrack_AI.Fullstack_Project.dto.ResumeResponseDTO;
 import com.PrepTrack_AI.Fullstack_Project.entity.Resume;
 import com.PrepTrack_AI.Fullstack_Project.entity.ResumeAnalysis;
 import com.PrepTrack_AI.Fullstack_Project.entity.User;
+import com.PrepTrack_AI.Fullstack_Project.service.NotificationService;
+import com.PrepTrack_AI.Fullstack_Project.entity.NotificationType;
 import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.mapper.ResumeMapper;
@@ -20,6 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import com.PrepTrack_AI.Fullstack_Project.storage.StorageService;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -38,6 +47,8 @@ public class ResumeServiceImpl implements ResumeService {
     private final ResumeAnalysisRepository resumeAnalysisRepository;
     private final ResumeMapper resumeMapper;
     private final UserProgressService userProgressService;
+    private final StorageService storageService;
+    private final NotificationService notificationService;
     private final Random random = new Random();
 
     @Override
@@ -62,18 +73,62 @@ public class ResumeServiceImpl implements ResumeService {
         // Update User Progress (award 15 points for uploading resume and update streak)
         userProgressService.updateProgressAfterResume(user, analysis.getAtsScore());
 
+        notificationService.sendNotification(user, "Resume Uploaded and Analyzed", "Your resume has been uploaded successfully. ATS Score: " + analysis.getAtsScore() + "/100.", NotificationType.SUCCESS);
+
+        return ApiResponse.success("Resume uploaded and analyzed successfully", resumeMapper.toResponseDTO(savedResume));
+    }
+
+    @Override
+    public ApiResponse<ResumeResponseDTO> uploadAndAnalyzeFile(String email, MultipartFile file) throws IOException {
+        log.info("Uploading raw resume file for user: {}", email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+
+        // Upload using storage service
+        String fileUrl = storageService.uploadFile(file, "resumes");
+
+        Resume resume = Resume.builder()
+                .fileUrl(fileUrl)
+                .uploadedAt(LocalDateTime.now())
+                .user(user)
+                .build();
+
+        Resume savedResume = resumeRepository.save(resume);
+        log.info("Resume saved successfully with ID: {} and URL: {}", savedResume.getId(), fileUrl);
+
+        // Perform mock ATS analysis
+        ResumeAnalysis analysis = generateMockAnalysis(savedResume);
+        resumeAnalysisRepository.save(analysis);
+
+        // Update User Progress
+        userProgressService.updateProgressAfterResume(user, analysis.getAtsScore());
+
+        notificationService.sendNotification(user, "Resume Uploaded and Analyzed", "Your resume file has been uploaded successfully. ATS Score: " + analysis.getAtsScore() + "/100.", NotificationType.SUCCESS);
+
         return ApiResponse.success("Resume uploaded and analyzed successfully", resumeMapper.toResponseDTO(savedResume));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<ResumeResponseDTO>> getUserResumes(String email) {
-        log.debug("Fetching resumes for user: {}", email);
+    public ApiResponse<PagedResponse<ResumeResponseDTO>> getUserResumes(String email, int page, int size) {
+        log.debug("Fetching resumes for user: {}, page: {}, size: {}", email, page, size);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
-        List<Resume> resumes = resumeRepository.findByUserIdOrderByUploadedAtDesc(user.getId());
-        return ApiResponse.success("User resumes fetched successfully", resumeMapper.toResponseDTOList(resumes));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Resume> resumePage = resumeRepository.findByUserIdOrderByUploadedAtDesc(user.getId(), pageable);
+        List<ResumeResponseDTO> content = resumeMapper.toResponseDTOList(resumePage.getContent());
+
+        PagedResponse<ResumeResponseDTO> response = PagedResponse.<ResumeResponseDTO>builder()
+                .content(content)
+                .pageNumber(resumePage.getNumber())
+                .pageSize(resumePage.getSize())
+                .totalElements(resumePage.getTotalElements())
+                .totalPages(resumePage.getTotalPages())
+                .last(resumePage.isLast())
+                .build();
+
+        return ApiResponse.success("User resumes fetched successfully", response);
     }
 
     @Override

@@ -19,7 +19,8 @@ import java.util.Set;
                 @UniqueConstraint(name = "uk_roles_name", columnNames = "name")
         },
         indexes = {
-                @Index(name = "idx_roles_name", columnList = "name")
+                @Index(name = "idx_roles_name", columnList = "name"),
+                @Index(name = "idx_roles_created_at", columnList = "created_at")
         }
 )
 @Getter

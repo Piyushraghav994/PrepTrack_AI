@@ -3,6 +3,7 @@ package com.PrepTrack_AI.Fullstack_Project.controller;
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
 import com.PrepTrack_AI.Fullstack_Project.dto.PermissionRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.PermissionResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
 import com.PrepTrack_AI.Fullstack_Project.service.PermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +34,10 @@ public class PermissionController {
             summary = "Get all permissions",
             description = "Retrieves a list of all permissions defined in the system."
     )
-    public ResponseEntity<ApiResponse<List<PermissionResponse>>> getAllPermissions() {
-        return ResponseEntity.ok(permissionService.getAllPermissions());
+    public ResponseEntity<ApiResponse<PagedResponse<PermissionResponse>>> getAllPermissions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(permissionService.getAllPermissions(page, size));
     }
 
     @PostMapping

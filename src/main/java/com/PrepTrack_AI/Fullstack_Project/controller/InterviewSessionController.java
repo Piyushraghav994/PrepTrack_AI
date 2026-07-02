@@ -47,8 +47,11 @@ public class InterviewSessionController {
     @GetMapping("/user")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get user's Interview Sessions", description = "Retrieves all mock interview sessions for the authenticated user.")
-    public ResponseEntity<ApiResponse<List<InterviewSessionResponseDTO>>> getUserSessions(Principal principal) {
-        return ResponseEntity.ok(interviewSessionService.getUserSessions(principal.getName()));
+    public ResponseEntity<ApiResponse<PagedResponse<InterviewSessionResponseDTO>>> getUserSessions(
+            Principal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(interviewSessionService.getUserSessions(principal.getName(), page, size));
     }
 
     @GetMapping("/{sessionId}/feedback")

@@ -46,14 +46,15 @@ class PermissionServiceImplTest {
 
     @Test
     void getAllPermissions_Success() {
-        when(permissionRepository.findAll()).thenReturn(List.of(testPermission));
+        org.springframework.data.domain.Page<Permission> page = new org.springframework.data.domain.PageImpl<>(List.of(testPermission));
+        when(permissionRepository.findAll(any(org.springframework.data.domain.Pageable.class))).thenReturn(page);
 
-        ApiResponse<List<PermissionResponse>> response = permissionService.getAllPermissions();
+        ApiResponse<com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse<PermissionResponse>> response = permissionService.getAllPermissions(0, 10);
 
         assertNotNull(response);
         assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().size());
-        assertEquals("INTERVIEW_CREATE", response.getData().get(0).getName());
+        assertEquals(1, response.getData().getContent().size());
+        assertEquals("INTERVIEW_CREATE", response.getData().getContent().get(0).getName());
     }
 
     @Test

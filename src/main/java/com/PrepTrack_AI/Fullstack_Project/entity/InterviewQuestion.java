@@ -9,7 +9,12 @@ import lombok.*;
  * JPA entity representing an Interview Question.
  */
 @Entity
-@Table(name = "interview_questions")
+@Table(
+        name = "interview_questions",
+        indexes = {
+                @Index(name = "idx_interview_questions_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,7 +43,7 @@ public class InterviewQuestion extends BaseEntity {
     private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "interview_id", nullable = false)
+    @JoinColumn(name = "interview_id", nullable = false, foreignKey = @ForeignKey(name = "fk_interview_questions_interview"))
     @JsonIgnore
     private Interview interview;
 }

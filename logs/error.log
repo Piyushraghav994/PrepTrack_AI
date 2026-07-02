@@ -1,6 +1,35 @@
-2026-06-27 22:07:46.575 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
-2026-06-27 22:10:21.740 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
-2026-06-27 22:59:03.159 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
-2026-06-27 22:59:56.690 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
-2026-06-28 22:29:14.884 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
-2026-06-28 22:35:42.324 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-07-02 12:53:40.793 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'cloudinary', defined in class path resource [com/PrepTrack_AI/Fullstack_Project/storage/StorageConfig.class], could not be registered. A bean with that name has already been defined in file [C:\Users\dell\OneDrive\Desktop\PrepTrack_AI\PrepTrack_AI\target\classes\com\PrepTrack_AI\Fullstack_Project\storage\CloudinaryStorageService.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+
+2026-07-02 12:53:45.393 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-07-02 12:54:48.156 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.PrepTrack_AI.Fullstack_Project.storage.CloudinaryStorageService required a bean of type 'com.cloudinary.Cloudinary' that could not be found.
+
+The following candidates were found but could not be injected:
+	- User-defined bean method 'cloudinaryClient' in 'StorageConfig' ignored as the bean value is null
+
+
+Action:
+
+Consider revisiting the entries above or defining a bean of type 'com.cloudinary.Cloudinary' in your configuration.
+
+2026-07-02 12:54:51.519 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com
+2026-07-02 12:55:41.467 [main] ERROR c.P.F.service.impl.UserServiceImpl - Database operation failed: User not found with email unknown@example.com

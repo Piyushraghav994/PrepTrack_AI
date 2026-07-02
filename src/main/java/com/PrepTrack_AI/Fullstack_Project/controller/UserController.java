@@ -5,6 +5,7 @@ import com.PrepTrack_AI.Fullstack_Project.dto.UserRequestDTO;
 import com.PrepTrack_AI.Fullstack_Project.dto.UserResponseDTO;
 import com.PrepTrack_AI.Fullstack_Project.dto.UserProfileDTO;
 import com.PrepTrack_AI.Fullstack_Project.dto.UpdateUserStatusRequest;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
 import com.PrepTrack_AI.Fullstack_Project.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import java.io.IOException;
 
 import java.security.Principal;
 import java.util.List;
@@ -38,6 +42,18 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserProfile(principal.getName()));
     }
 
+    @PostMapping(value = "/profile/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Upload and update profile picture",
+            description = "Uploads a raw profile image, stores it using the active cloud provider, and updates the user's profile image URL."
+    )
+    public ResponseEntity<ApiResponse<UserProfileDTO>> updateProfilePicture(
+            @RequestParam("file") MultipartFile file,
+            Principal principal) throws IOException {
+        return ResponseEntity.ok(userService.updateProfilePicture(principal.getName(), file));
+    }
+
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     @Operation(
@@ -56,8 +72,10 @@ public class UserController {
             summary = "Get all users",
             description = "Retrieves a list of all platform user profiles. Admin only."
     )
-    public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<ApiResponse<PagedResponse<UserResponseDTO>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(userService.getAllUsers(page, size));
     }
 
     @PutMapping("/{id}/status")

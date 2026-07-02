@@ -12,7 +12,13 @@ import java.util.List;
  * JPA entity representing an Interview.
  */
 @Entity
-@Table(name = "interviews")
+@Table(
+        name = "interviews",
+        indexes = {
+                @Index(name = "idx_interviews_role", columnList = "role"),
+                @Index(name = "idx_interviews_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

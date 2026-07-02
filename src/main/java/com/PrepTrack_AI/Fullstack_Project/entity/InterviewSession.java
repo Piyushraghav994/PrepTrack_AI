@@ -9,7 +9,12 @@ import java.time.LocalDateTime;
  * JPA entity representing an Interview Session.
  */
 @Entity
-@Table(name = "interview_sessions")
+@Table(
+        name = "interview_sessions",
+        indexes = {
+                @Index(name = "idx_interview_sessions_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,11 +27,11 @@ public class InterviewSession extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_interview_sessions_user"))
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "interview_id", nullable = false)
+    @JoinColumn(name = "interview_id", nullable = false, foreignKey = @ForeignKey(name = "fk_interview_sessions_interview"))
     private Interview interview;
 
     @Column(name = "score")

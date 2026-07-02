@@ -2,6 +2,8 @@ package com.PrepTrack_AI.Fullstack_Project.service.impl;
 
 import com.PrepTrack_AI.Fullstack_Project.dto.*;
 import com.PrepTrack_AI.Fullstack_Project.entity.*;
+import com.PrepTrack_AI.Fullstack_Project.service.NotificationService;
+import com.PrepTrack_AI.Fullstack_Project.entity.NotificationType;
 import com.PrepTrack_AI.Fullstack_Project.exception.ResourceNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.exception.UserNotFoundException;
 import com.PrepTrack_AI.Fullstack_Project.mapper.InterviewSessionMapper;
@@ -16,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,6 +39,7 @@ public class InterviewSessionServiceImpl implements InterviewSessionService {
     private final InterviewFeedbackRepository interviewFeedbackRepository;
     private final InterviewSessionMapper interviewSessionMapper;
     private final UserProgressService userProgressService;
+    private final NotificationService notificationService;
 
     @Override
     public ApiResponse<InterviewSessionResponseDTO> startSession(String email, Long interviewId) {
@@ -80,19 +86,34 @@ public class InterviewSessionServiceImpl implements InterviewSessionService {
         }
         userProgressService.updateProgressAfterSession(updated.getUser(), request.getScore(), questionsCount);
 
+        notificationService.sendNotification(updated.getUser(), "Interview Session Completed", 
+                "You completed your mock interview for " + updated.getInterview().getRole() + " at " + updated.getInterview().getCompany() + " with a score of " + updated.getScore() + "/100.", NotificationType.SUCCESS);
+
         log.info("Interview session ID {} submitted successfully", sessionId);
         return ApiResponse.success("Interview session submitted successfully", interviewSessionMapper.toResponseDTO(updated));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<List<InterviewSessionResponseDTO>> getUserSessions(String email) {
-        log.debug("Fetching interview sessions for user: {}", email);
+    public ApiResponse<PagedResponse<InterviewSessionResponseDTO>> getUserSessions(String email, int page, int size) {
+        log.debug("Fetching interview sessions for user: {}, page: {}, size: {}", email, page, size);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
 
-        List<InterviewSession> sessions = interviewSessionRepository.findByUserIdOrderByStartTimeDesc(user.getId());
-        return ApiResponse.success("User sessions retrieved successfully", interviewSessionMapper.toResponseDTOList(sessions));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<InterviewSession> sessionPage = interviewSessionRepository.findByUserIdOrderByStartTimeDesc(user.getId(), pageable);
+        List<InterviewSessionResponseDTO> content = interviewSessionMapper.toResponseDTOList(sessionPage.getContent());
+
+        PagedResponse<InterviewSessionResponseDTO> response = PagedResponse.<InterviewSessionResponseDTO>builder()
+                .content(content)
+                .pageNumber(sessionPage.getNumber())
+                .pageSize(sessionPage.getSize())
+                .totalElements(sessionPage.getTotalElements())
+                .totalPages(sessionPage.getTotalPages())
+                .last(sessionPage.isLast())
+                .build();
+
+        return ApiResponse.success("User sessions retrieved successfully", response);
     }
 
     @Override

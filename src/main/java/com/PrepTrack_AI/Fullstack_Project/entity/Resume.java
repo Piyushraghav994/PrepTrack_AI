@@ -10,7 +10,12 @@ import java.time.LocalDateTime;
  * JPA entity representing a Resume uploaded by a user.
  */
 @Entity
-@Table(name = "resumes")
+@Table(
+        name = "resumes",
+        indexes = {
+                @Index(name = "idx_resumes_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,7 +35,7 @@ public class Resume extends BaseEntity {
     private LocalDateTime uploadedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_resumes_user"))
     private User user;
 
     @OneToOne(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

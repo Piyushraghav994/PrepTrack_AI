@@ -13,7 +13,7 @@ public interface InterviewSessionService {
 
     ApiResponse<InterviewSessionResponseDTO> submitSession(Long sessionId, SubmitSessionRequestDTO request);
 
-    ApiResponse<List<InterviewSessionResponseDTO>> getUserSessions(String email);
+    ApiResponse<PagedResponse<InterviewSessionResponseDTO>> getUserSessions(String email, int page, int size);
 
     ApiResponse<InterviewFeedbackResponseDTO> getSessionFeedback(Long sessionId);
 }

@@ -3,6 +3,7 @@ package com.PrepTrack_AI.Fullstack_Project.service;
 import com.PrepTrack_AI.Fullstack_Project.dto.ApiResponse;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleRequest;
 import com.PrepTrack_AI.Fullstack_Project.dto.RoleResponse;
+import com.PrepTrack_AI.Fullstack_Project.dto.PagedResponse;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface RoleService {
     /**
      * Retrieves all roles in the system.
      */
-    ApiResponse<List<RoleResponse>> getAllRoles();
+    ApiResponse<PagedResponse<RoleResponse>> getAllRoles(int page, int size);
 
     /**
      * Retrieves a role by its database ID.

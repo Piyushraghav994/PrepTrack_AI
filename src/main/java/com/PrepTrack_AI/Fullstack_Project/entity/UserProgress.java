@@ -7,7 +7,12 @@ import lombok.*;
  * JPA entity representing user progress, streak, and scores.
  */
 @Entity
-@Table(name = "user_progress")
+@Table(
+        name = "user_progress",
+        indexes = {
+                @Index(name = "idx_user_progress_created_at", columnList = "created_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +25,7 @@ public class UserProgress extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_user_progress_user"))
     private User user;
 
     @Column(name = "completed_questions", nullable = false)
