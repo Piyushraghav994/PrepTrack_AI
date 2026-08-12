@@ -60,8 +60,4 @@ EXPOSE 8080
 # Run the Spring Boot application.
 # -Djava.security.egd is a performance tweak that speeds up
 # startup on Linux containers by using a faster random source.
-ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
-    -Dspring.datasource.url=$DB_URL \
-    -Dspring.datasource.username=$DB_USERNAME \
-    -Dspring.datasource.password=$DB_PASSWORD \
-    -jar app.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
