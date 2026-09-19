@@ -1,17 +1,8 @@
+HELP.md
 target/
-.vscode/
-.idea/
-*.log
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
-### Secrets — NEVER commit these ###
-.env
-.env.*
-*.env
-application-prod.properties
-application-local.properties
 
 ### STS ###
 .apt_generated
@@ -23,6 +14,7 @@ application-local.properties
 .sts4-cache
 
 ### IntelliJ IDEA ###
+.idea
 *.iws
 *.iml
 *.ipr
@@ -36,3 +28,6 @@ application-local.properties
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+### VS Code ###
+.vscode/

@@ -12,11 +12,11 @@ FROM eclipse-temurin:21-jdk AS builder
 # Set a working directory inside the container for the build
 WORKDIR /app
 
-# Copy the Maven wrapper and pom.xml first.
+# Copy the Maven wrapper and pom.xml first from backend/.
 # Docker caches layers — if pom.xml hasn't changed, it won't
 # re-download all dependencies on the next build.
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+COPY backend/.mvn/ .mvn/
+COPY backend/mvnw backend/pom.xml ./
 
 # Make the Maven wrapper executable (needed on Linux)
 RUN chmod +x mvnw
@@ -27,8 +27,8 @@ RUN chmod +x mvnw
 # dependency:go-offline = pre-download everything Maven needs
 RUN ./mvnw dependency:go-offline -B -q
 
-# Now copy the full source code
-COPY src/ src/
+# Now copy the full backend source code
+COPY backend/src/ src/
 
 # Build the application, skipping tests (tests are for CI/CD pipelines,
 # not for building the production image)
